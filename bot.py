@@ -259,7 +259,7 @@ info = {
 }
 
 
-
+import random
 import telebot
 from telebot import types
 import config
@@ -273,15 +273,17 @@ token = '641542217:AAHj-pmdV9Gg9IZ6epNOQDUCiLokDhKZiWs'
 bot = telebot.TeleBot(token)
 url = "https://api.telegram.org/bot641542217:AAHj-pmdV9Gg9IZ6epNOQDUCiLokDhKZiWs/"
 last_update = 0
-
-vozrostanieNum = []
+freestol = random.randint(1,2)
+sovlist = []
+vozrostanieNum = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
 vozrostanieName = []
 @bot.message_handler(commands=["start"])
 def inline(message):
 	keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
 	#key = types.InlineKeyboardMarkup()
+	button_main = types.KeyboardButton(text="Главное меню")
 	button_geo = types.KeyboardButton(text="Обновить местоположение", request_location=True)
-	keyboard.add(button_geo)#,but_2
+	keyboard.add(button_geo,button_main)#,but_2
 	bot.send_message(message.chat.id, "Здравствуйте, я буду вашим помощником-ботом который поможет опредилить где самый ближайший ресторан и забронировать место")
 	bot.send_message(message.chat.id, "Но для начало нам нужно чтобы вы поделились своим местоположением, и я рекомендую кажждый раз обновлять геолокацию", reply_markup=keyboard)
 
@@ -344,81 +346,217 @@ def location(message):
 	for lat in info['restoran']:
 		vozrostanieNum.append(lat['range'])
 	vozrostanieNum.sort()
-	key = types.InlineKeyboardMarkup()
+	key = types.InlineKeyboardMarkup(row_width=1)
 	but_1= types.InlineKeyboardButton(text="Список ближайших ресторанов", callback_data="Spisok")
-	key.add(but_1)#,but_2
-	bot.send_message(message.chat.id, "благодарю что поделились местоположением ^_^",reply_markup=key)
-	
+	but_2= types.InlineKeyboardButton(text="Обратная связь/техподдержка", url='https://t.me/Unelos')
+	but_3= types.InlineKeyboardButton(text="Поиск ресторана", callback_data='poisk')
+	but_4= types.InlineKeyboardButton(text="Случайный ресторан", callback_data='random')
+	key.add(but_1,but_2,but_3,but_4)
+	bot.send_message(message.chat.id,'Главное меню',reply_markup=key)
+lol = False
 @bot.callback_query_handler(func=lambda c:True)
 def inlin(c):
 	if c.data == "Spisok":
-		bot.send_message(c.message.chat.id,	"вот пожалуйста")
-		count = 1
-		count2 = 2
-		bron = types.InlineKeyboardMarkup()
+		#count = 1
 		
-		but_3 = types.InlineKeyboardButton(text="Запрос на бронирование место", callback_data="брон")
 
 		list1 = []
 		
-		for ranga in vozrostanieNum:
-			
-			instagram = list1
-			instagram = types.InlineKeyboardMarkup()
+		bron2 = types.InlineKeyboardMarkup()
+		bron3 = types.InlineKeyboardMarkup()
+		bron4 = types.InlineKeyboardMarkup()
+		bron5 = types.InlineKeyboardMarkup()
+		bron6 = types.InlineKeyboardMarkup()
+		bron7 = types.InlineKeyboardMarkup()
+		bron8 = types.InlineKeyboardMarkup()
+		bron9 = types.InlineKeyboardMarkup()
+		bron10 = types.InlineKeyboardMarkup()
+	
+		but_bron_2 = types.InlineKeyboardButton(text="забронировать столик", callback_data="брон2")
+		but_bron_3 = types.InlineKeyboardButton(text="забронировать столик", callback_data="брон3")
+		but_bron_4 = types.InlineKeyboardButton(text="забронировать столик", callback_data="брон4")
+		but_bron_5 = types.InlineKeyboardButton(text="забронировать столик", callback_data="брон5")
+		but_bron_6 = types.InlineKeyboardButton(text="забронировать столик", callback_data="брон6")
+		but_bron_7 = types.InlineKeyboardButton(text="забронировать столик", callback_data="брон7")
+		but_bron_8 = types.InlineKeyboardButton(text="забронировать столик", callback_data="брон8")
+		but_bron_9 = types.InlineKeyboardButton(text="забронировать столик", callback_data="брон9")
+		but_bron_10 = types.InlineKeyboardButton(text="забронировать столик", callback_data="брон10")
+		count = 1
+		a = len(vozrostanieNum)-count
+		for ranga in range(0,len(vozrostanieNum)-a):
 			for name in info['restoran']:
-				if ranga == name['range']:
-					if ranga < 1:
-						a = round(ranga,3)
+				if vozrostanieNum[ranga] == name['range']:
+					if vozrostanieNum[ranga] < 1:
+						a = round(vozrostanieNum[ranga],3)
 						a = 1000 * a
-						but_instagram = types.InlineKeyboardButton(text="instagram", url=name['instagram'] )
-						instagram.add(but_instagram)
-						
-						bot.send_message(c.message.chat.id, (("%s.%s,%s \n %s \n Номер: %s \n Оценка: %s из 5 баллов \n адрес:%s \n от вас %s метрах")%(count,name['name'],name['vid'],name['worktime'],name['phone'],name['оценка'],name['adress'],a)), reply_markup=instagram)
+						bron1 = types.InlineKeyboardMarkup()
+						but_bron_1 = types.InlineKeyboardButton(text="забронировать столик", callback_data="брон1")
+						bron1.add(but_bron_1)
+						bot.send_message(c.message.chat.id, (("%s.%s,%s \n %s \n Номер: %s \n Оценка: %s из 5 баллов \n адрес:%s \n Instagram:%s \n от вас %s метрах,")%(count,name['name'],name['vid'],name['worktime'],name['phone'],name['оценка'],name['adress'],name['instagram'],a)), reply_markup=bron1)
 					else:
-						but_instagram = types.InlineKeyboardButton(text="instagram", url=name['instagram'] )
-						instagram.add(but_instagram)
-						bot.send_message(c.message.chat.id, (("%s.%s,%s \n %s \n Номер: %s \n Оценка: %s из 5 баллов \n адрес:%s \n от вас %s км")%(count,name['name'],name['vid'],name['worktime'],name['phone'],name['оценка'],name['adress'],round(ranga,2))), reply_markup=instagram)
-				if count > 10:
-					"""
-					but_bron_1 = types.InlineKeyboardButton(text="№1", callback_data="брон")
-					but_bron_2 = types.InlineKeyboardButton(text="№1", callback_data="брон")
-					but_bron_3 = types.InlineKeyboardButton(text="№1", callback_data="брон")
-					but_bron_4 = types.InlineKeyboardButton(text="№1", callback_data="брон")
-					but_bron_5 = types.InlineKeyboardButton(text="№1", callback_data="брон")
-					but_bron_6 = types.InlineKeyboardButton(text="№1", callback_data="брон")
-					but_bron_7 = types.InlineKeyboardButton(text="№1", callback_data="брон")
-					but_bron_8 = types.InlineKeyboardButton(text="№1", callback_data="брон")
-					but_bron_9 = types.InlineKeyboardButton(text="№1", callback_data="брон")
-					but_bron_10 = types.InlineKeyboardButton(text="№1", callback_data="брон")
-					bron.add(but_3,but_4)
-					"""
-					bot.send_message(c.message.chat.id, "Хотите забронировать место в одном из этих ресторанов?", reply_markup=bron)
-
-
-					break
-			
-			count2 += 2
+						bron1.add(but_bron_1)
+						bot.send_message(c.message.chat.id, (("%s.%s,%s \n %s \n Номер: %s \n Оценка: %s из 5 баллов \n адрес:%s \n Instagram:%s \n от вас %s км")%(count,name['name'],name['vid'],name['worktime'],name['phone'],name['оценка'],name['adress'],name['instagram'],round(vozrostanieNum[ranga],2))),reply_markup=bron1)
 			count += 1
-		#bot.send_message(c.message.chat.id, '')
+
+		for ranga in range(1,len(vozrostanieNum)+2-len(vozrostanieNum)):
+			for name in info['restoran']:
+				if vozrostanieNum[ranga] == name['range']:
+					if vozrostanieNum[ranga] < 1:
+						a = round(vozrostanieNum[ranga],3)
+						a = 1000 * a
+						bron2.add(but_bron_2)
+						bot.send_message(c.message.chat.id, (("%s.%s,%s \n %s \n Номер: %s \n Оценка: %s из 5 баллов \n адрес:%s \n Instagram:%s \n от вас %s метрах,")%(count,name['name'],name['vid'],name['worktime'],name['phone'],name['оценка'],name['adress'],name['instagram'],a)), reply_markup=bron2)
+					else:
+						bron2.add(but_bron_2)
+						bot.send_message(c.message.chat.id, (("%s.%s,%s \n %s \n Номер: %s \n Оценка: %s из 5 баллов \n адрес:%s \n Instagram:%s \n от вас %s км")%(count,name['name'],name['vid'],name['worktime'],name['phone'],name['оценка'],name['adress'],name['instagram'],round(vozrostanieNum[ranga],2))),reply_markup=bron2)
+			count += 1
+
+		for ranga in range(2,len(vozrostanieNum)+3-len(vozrostanieNum)):
+			for name in info['restoran']:
+				if vozrostanieNum[ranga] == name['range']:
+					if ranga < 1:
+						a = round(vozrostanieNum[ranga],3)
+						a = 1000 * a
+						bron3.add(but_bron_3)
+						bot.send_message(c.message.chat.id, (("%s.%s,%s \n %s \n Номер: %s \n Оценка: %s из 5 баллов \n адрес:%s \n Instagram:%s \n от вас %s метрах,")%(count,name['name'],name['vid'],name['worktime'],name['phone'],name['оценка'],name['adress'],name['instagram'],a)), reply_markup=bron3)
+					else:
+						bron3.add(but_bron_3)
+						bot.send_message(c.message.chat.id, (("%s.%s,%s \n %s \n Номер: %s \n Оценка: %s из 5 баллов \n адрес:%s \n Instagram:%s \n от вас %s км")%(count,name['name'],name['vid'],name['worktime'],name['phone'],name['оценка'],name['adress'],name['instagram'],round(vozrostanieNum[ranga],2))),reply_markup=bron3)
+			count += 1
+
+		for ranga in range(3,len(vozrostanieNum)+4-len(vozrostanieNum)):
+			for name in info['restoran']:
+				if vozrostanieNum[ranga] == name['range']:
+					if ranga < 1:
+						a = round(vozrostanieNum[ranga],3)
+						a = 1000 * a
+						bron4.add(but_bron_4)
+						bot.send_message(c.message.chat.id, (("%s.%s,%s \n %s \n Номер: %s \n Оценка: %s из 5 баллов \n адрес:%s \n Instagram:%s \n от вас %s метрах,")%(count,name['name'],name['vid'],name['worktime'],name['phone'],name['оценка'],name['adress'],name['instagram'],a)), reply_markup=bron4)
+					else:
+						bron4.add(but_bron_4)
+						bot.send_message(c.message.chat.id, (("%s.%s,%s \n %s \n Номер: %s \n Оценка: %s из 5 баллов \n адрес:%s \n Instagram:%s \n от вас %s км")%(count,name['name'],name['vid'],name['worktime'],name['phone'],name['оценка'],name['adress'],name['instagram'],round(vozrostanieNum[ranga],2))),reply_markup=bron4)
+			count += 1
+
+		for ranga in range(4,len(vozrostanieNum)+5-len(vozrostanieNum)):
+			for name in info['restoran']:
+				if vozrostanieNum[ranga] == name['range']:
+					if ranga < 1:
+						a = round(vozrostanieNum[ranga],3)
+						a = 1000 * a
+						bron5.add(but_bron_5)
+						bot.send_message(c.message.chat.id, (("%s.%s,%s \n %s \n Номер: %s \n Оценка: %s из 5 баллов \n адрес:%s \n Instagram:%s \n от вас %s метрах,")%(count,name['name'],name['vid'],name['worktime'],name['phone'],name['оценка'],name['adress'],name['instagram'],a)), reply_markup=bron5)
+					else:
+						bron5.add(but_bron_5)
+						bot.send_message(c.message.chat.id, (("%s.%s,%s \n %s \n Номер: %s \n Оценка: %s из 5 баллов \n адрес:%s \n Instagram:%s \n от вас %s км")%(count,name['name'],name['vid'],name['worktime'],name['phone'],name['оценка'],name['adress'],name['instagram'],round(vozrostanieNum[ranga],2))),reply_markup=bron5)
+			count += 1
+
+		for ranga in range(5,len(vozrostanieNum)+6-len(vozrostanieNum)):
+			for name in info['restoran']:
+				if vozrostanieNum[ranga] == name['range']:
+					if ranga < 1:
+						a = round(vozrostanieNum[ranga],3)
+						a = 1000 * a
+						bron6.add(but_bron_6)
+						bot.send_message(c.message.chat.id, (("%s.%s,%s \n %s \n Номер: %s \n Оценка: %s из 5 баллов \n адрес:%s \n Instagram:%s \n от вас %s метрах,")%(count,name['name'],name['vid'],name['worktime'],name['phone'],name['оценка'],name['adress'],name['instagram'],a)), reply_markup=bron6)
+					else:
+						bron6.add(but_bron_6)
+						bot.send_message(c.message.chat.id, (("%s.%s,%s \n %s \n Номер: %s \n Оценка: %s из 5 баллов \n адрес:%s \n Instagram:%s \n от вас %s км")%(count,name['name'],name['vid'],name['worktime'],name['phone'],name['оценка'],name['adress'],name['instagram'],round(vozrostanieNum[ranga],2))),reply_markup=bron6)
+			count += 1
+
+		for ranga in range(6,len(vozrostanieNum)+7-len(vozrostanieNum)):
+			for name in info['restoran']:
+				if vozrostanieNum[ranga] == name['range']:
+					if ranga < 1:
+						a = round(vozrostanieNum[ranga],3)
+						a = 1000 * a
+						bron7.add(but_bron_7)
+						bot.send_message(c.message.chat.id, (("%s.%s,%s \n %s \n Номер: %s \n Оценка: %s из 5 баллов \n адрес:%s \n Instagram:%s \n от вас %s метрах,")%(count,name['name'],name['vid'],name['worktime'],name['phone'],name['оценка'],name['adress'],name['instagram'],a)), reply_markup=bron7)
+					else:
+						bron7.add(but_bron_7)
+						bot.send_message(c.message.chat.id, (("%s.%s,%s \n %s \n Номер: %s \n Оценка: %s из 5 баллов \n адрес:%s \n Instagram:%s \n от вас %s км")%(count,name['name'],name['vid'],name['worktime'],name['phone'],name['оценка'],name['adress'],name['instagram'],round(vozrostanieNum[ranga],2))),reply_markup=bron7)
+			count += 1
+
+		for ranga in range(7,len(vozrostanieNum)+8-len(vozrostanieNum)):
+			for name in info['restoran']:
+				if vozrostanieNum[ranga] == name['range']:
+					if ranga < 1:
+						a = round(vozrostanieNum[ranga],3)
+						a = 1000 * a
+						bron8.add(but_bron_8)
+						bot.send_message(c.message.chat.id, (("%s.%s,%s \n %s \n Номер: %s \n Оценка: %s из 5 баллов \n адрес:%s \n Instagram:%s \n от вас %s метрах,")%(count,name['name'],name['vid'],name['worktime'],name['phone'],name['оценка'],name['adress'],name['instagram'],a)), reply_markup=bron8)
+					else:
+						bron8.add(but_bron_8)
+						bot.send_message(c.message.chat.id, (("%s.%s,%s \n %s \n Номер: %s \n Оценка: %s из 5 баллов \n адрес:%s \n Instagram:%s \n от вас %s км")%(count,name['name'],name['vid'],name['worktime'],name['phone'],name['оценка'],name['adress'],name['instagram'],round(vozrostanieNum[ranga],2))),reply_markup=bron8)
+			count += 1
+
+		for ranga in range(8,len(vozrostanieNum)+9-len(vozrostanieNum)):
+			for name in info['restoran']:
+				if vozrostanieNum[ranga] == name['range']:
+					if ranga < 1:
+						a = round(vozrostanieNum[ranga],3)
+						a = 1000 * a
+						bron9.add(but_bron_9)
+						bot.send_message(c.message.chat.id, (("%s.%s,%s \n %s \n Номер: %s \n Оценка: %s из 5 баллов \n адрес:%s \n Instagram:%s \n от вас %s метрах,")%(count,name['name'],name['vid'],name['worktime'],name['phone'],name['оценка'],name['adress'],name['instagram'],a)), reply_markup=bron9)
+					else:
+						bron9.add(but_bron_9)
+						bot.send_message(c.message.chat.id, (("%s.%s,%s \n %s \n Номер: %s \n Оценка: %s из 5 баллов \n адрес:%s \n Instagram:%s \n от вас %s км")%(count,name['name'],name['vid'],name['worktime'],name['phone'],name['оценка'],name['adress'],name['instagram'],round(vozrostanieNum[ranga],2))),reply_markup=bron9)
+			count += 1
+
+		for ranga in range(9,len(vozrostanieNum)+10-len(vozrostanieNum)):
+			for name in info['restoran']:
+				if vozrostanieNum[ranga] == name['range']:
+					if ranga < 1:
+						a = round(vozrostanieNum[ranga],3)
+						a = 1000 * a
+						bron10.add(but_bron_10)
+						bot.send_message(c.message.chat.id, (("%s.%s,%s \n %s \n Номер: %s \n Оценка: %s из 5 баллов \n адрес:%s \n Instagram:%s \n от вас %s метрах,")%(count,name['name'],name['vid'],name['worktime'],name['phone'],name['оценка'],name['adress'],name['instagram'],a)), reply_markup=bron10)
+					else:
+						bron10.add(but_bron_10)
+						bot.send_message(c.message.chat.id, (("%s.%s,%s \n %s \n Номер: %s \n Оценка: %s из 5 баллов \n адрес:%s \n Instagram:%s \n от вас %s км")%(count,name['name'],name['vid'],name['worktime'],name['phone'],name['оценка'],name['adress'],name['instagram'],round(vozrostanieNum[ranga],2))),reply_markup=bron10)
+			count += 1
+		"""
+		@bot.callback_query_handler(func=lambda c:True)
+		def inlin(d):
+			if d.data == 'брон1':
+				freestol = random.randint(1,2)
+			if freestol == 1:
+				bot.send_message(c.message.chat.id, "Вы успешно забронировали место, брон действительно в течении 15 мин")
+			else:
+				bot.send_message(c.message.chat.id, "мест нет :(")
+		"""
+	if c.data == 'poisk':
+		sovpadenie = 0
+		bot.send_message(c.message.chat.id,"Введите название")
+		@bot.message_handler(content_types=["text"])
+		def repeat_all_messages(message): # Название функции не играет никакой роли, в принципе
+			#bot.send_message(c.message.chat.id, c.message.text)
+			bron11 = types.InlineKeyboardMarkup()
+			but_bron_11 = types.InlineKeyboardButton(text="забронировать столик", callback_data="брон11")
+			a = 0
+			for name,count in zip(info['restoran'],range(0,len(info['restoran'])-1)):
+				for x in name:
+					if 'name' == x:
+						if str(message.text) == str(name[x]):
+							bron11.add(but_bron_11)
+							bot.send_message(message.chat.id, (("%s,%s \n %s \n Номер: %s \n Оценка: %s из 5 баллов \n адрес:%s \n Instagram:%s \n от вас %s км")%(name['name'],name['vid'],name['worktime'],name['phone'],name['оценка'],name['adress'],name['instagram'],round(name['range'],2))),reply_markup=bron11)
+							a += 1
+							break
+				if (len(info['restoran'])-2) == count and a == 0:
+					bot.send_message(c.message.chat.id,"Совпадении нет")
+					
+	if c.data == 'random':
+		bron12 = types.InlineKeyboardMarkup()
+		but_bron_12 = types.InlineKeyboardButton(text="забронировать столик", callback_data="брон12")
+		but_main = types.InlineKeyboardButton(text="Главное меню", callback_data="глав")
+		rannum = random.randint(1,len(vozrostanieNum))
+		for name in info['restoran']:
+			for x in name:
+				if 'id' == x:
+					if rannum == name[x]:
+						bron12.add(but_bron_12,but_main)
+						bot.send_message(c.message.chat.id, (("%s,%s \n %s \n Номер: %s \n Оценка: %s из 5 баллов \n адрес:%s \n Instagram:%s \n от вас %s км")%(name['name'],name['vid'],name['worktime'],name['phone'],name['оценка'],name['adress'],name['instagram'],round(name['range'],2))),reply_markup=bron12)
+	
 		
-		#but_3 = types.InlineKeyboardButton(text="да", callback_data="да")
-		#but_4 = types.InlineKeyboardButton(text="нет", callback_data="нет")
-		#bron.add(but_3,but_4)
-		bot.send_message(c.message.chat.id, "хотите встать в очередь?", reply_markup=bron)
-		#ожидамое количество людей в очереди
-	print (vozrostanieNum)
-
-# We want to keep checking for updates. So this must be a never ending loop
-
-
-
-
-
-	#------------------------
-
-
-
-
 bot.polling(none_stop=True) 
 
 	#--------------------
